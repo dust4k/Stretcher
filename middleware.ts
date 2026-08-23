@@ -3,7 +3,14 @@ import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
 const COOKIE_NAME = "stretcher_session";
-const PUBLIC_PATHS = ["/login", "/manifest.webmanifest", "/sw.js", "/icon.svg", "/api/health"];
+const PUBLIC_PATHS = [
+  "/login",
+  "/manifest.webmanifest",
+  "/sw.js",
+  "/icon.svg",
+  "/api/health",
+  "/api/setup",
+];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
