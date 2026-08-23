@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { z } from "zod";
+import { hasOpenAIKey } from "@/lib/env";
 import { getRoutineSummary } from "@/lib/db/queries";
 
 const placementSchema = z.object({
@@ -15,8 +16,8 @@ const placementSchema = z.object({
 export type PlacementResult = z.infer<typeof placementSchema>;
 
 function getOpenAI() {
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error("OPENAI_API_KEY is not set");
+  if (!hasOpenAIKey()) {
+    throw new Error("OPENAI_API_KEY is not set or invalid");
   }
   return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 }

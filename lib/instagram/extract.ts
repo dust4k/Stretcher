@@ -1,3 +1,5 @@
+import { uploadToBlob } from "@/lib/env";
+
 export interface MediaItem {
   type: "video" | "image";
   url: string;
@@ -197,8 +199,6 @@ export async function streamToBlob(
   filename: string,
   contentType: string
 ): Promise<{ url: string; pathname: string }> {
-  const { put } = await import("@vercel/blob");
-
   const res = await fetch(mediaUrl, {
     headers: {
       "User-Agent":
@@ -211,11 +211,7 @@ export async function streamToBlob(
     throw new Error(`Failed to download media (${res.status})`);
   }
 
-  const blob = await put(filename, res.body, {
-    access: "public",
-    contentType,
-    token: process.env.BLOB_READ_WRITE_TOKEN,
-  });
+  const blob = await uploadToBlob(filename, res.body, contentType);
 
   return { url: blob.url, pathname: blob.pathname };
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { put } from "@vercel/blob";
+import { uploadToBlob } from "@/lib/env";
 
 export const maxDuration = 60;
 
@@ -30,11 +30,7 @@ export async function POST(request: Request) {
       const isVideo = file.type.startsWith("video/");
       const ext = isVideo ? "mp4" : "jpg";
       const filename = `stretch-manual-${Date.now()}-${i}.${ext}`;
-      const blob = await put(filename, file, {
-        access: "public",
-        contentType: file.type || (isVideo ? "video/mp4" : "image/jpeg"),
-        token: process.env.BLOB_READ_WRITE_TOKEN,
-      });
+      const blob = await uploadToBlob(filename, file, file.type || (isVideo ? "video/mp4" : "image/jpeg"));
 
       if (isVideo) {
         videoUrls.push(blob.url);
