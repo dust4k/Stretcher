@@ -38,10 +38,25 @@ npm run dev
 
 ## Deploy to Vercel
 
-1. Push to GitHub and import in Vercel
-2. Add environment variables (see `.env.example`)
-3. Enable Vercel Blob and Postgres (or use Neon)
-4. On iPhone: open the deployed URL in Safari → Share → Add to Home Screen
+1. Push to GitHub and import in Vercel (or connect Git in project settings)
+2. Create a **Neon Postgres** store in Vercel Storage and link it to the project
+3. Create a **Blob** store and link it to the project
+4. Add environment variables in Vercel → Settings → Environment Variables:
+   - `APP_PASSWORD` — your login password
+   - `AUTH_SECRET` — random 32+ character string
+   - `OPENAI_API_KEY` — OpenAI API key
+   - `INSTAGRAM_SESSION_ID` — optional, for reliable Reel downloads
+5. Neon/Blob linking auto-injects `stretch_POSTGRES_URL` and `BLOB_READ_WRITE_TOKEN`; the app resolves these automatically. You do **not** need to manually set `DATABASE_URL` unless you prefer to.
+6. After first deploy, initialize the database (one time):
+
+```bash
+curl -X POST https://YOUR-APP.vercel.app/api/setup \
+  -H "Content-Type: application/json" \
+  -d '{"password":"YOUR_APP_PASSWORD"}'
+```
+
+7. Verify status: open `/api/health` — should show `"status":"ok"`
+8. On iPhone: open the deployed URL in Safari → Share → Add to Home Screen
 
 ## Environment variables
 

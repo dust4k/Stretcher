@@ -41,3 +41,4 @@ next-env.d.ts
 
 # drizzle generated migrations (keep drizzle/*.sql)
 /drizzle/meta
+.env*
