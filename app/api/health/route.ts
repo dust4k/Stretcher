@@ -7,13 +7,15 @@ export async function GET() {
   const db = await checkDatabase();
 
   const envOk = {
-    auth: Boolean(process.env.AUTH_SECRET && process.env.APP_PASSWORD),
+    appPassword: Boolean(process.env.APP_PASSWORD),
+    authSecret: Boolean(process.env.AUTH_SECRET),
     blob: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
     openai: Boolean(process.env.OPENAI_API_KEY),
     database: db.ok,
   };
+  const authReady = envOk.appPassword && envOk.authSecret;
 
-  const allOk = Object.values(envOk).every(Boolean) && db.tableExists;
+  const allOk = authReady && envOk.blob && envOk.openai && db.tableExists;
 
   return NextResponse.json(
     {
